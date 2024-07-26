@@ -15,6 +15,7 @@
  */
 
 //#include "print.h"
+#include "../../../../../../../quantum/color.h"
 #include QMK_KEYBOARD_H
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
@@ -46,8 +47,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______,  UC_WIN,   _______,                      _______,                                _______,  _______,  _______,  RGB_RMOD,  RGB_VAD,  RGB_MOD,  _______,  _______)
 };
 
+void keyboard_post_init_user(void) {
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    rgb_matrix_sethsv_noeeprom(HSV_RED);
+}
+
+// set the alphabetical keys to blue when CAPS LOCK is ON
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-if (host_keyboard_led_state().caps_lock) {
+
+    int colorOn[] = {213, 255, 255}; // Magenta
+    if (host_keyboard_led_state().caps_lock) {
         int capsLockKeyChanges[] =
             {37, 38, 39, 40, 41, 42, 43, 44, 45, 46,
             54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
@@ -55,11 +64,11 @@ if (host_keyboard_led_state().caps_lock) {
         size_t sizeCapsArray = sizeof(capsLockKeyChanges) / sizeof(capsLockKeyChanges[0]);
         for (size_t i = 0; i < sizeCapsArray; i++)
         {
-            RGB_MATRIX_INDICATOR_SET_COLOR(capsLockKeyChanges[i], 0, 0, 255);
+            RGB_MATRIX_INDICATOR_SET_COLOR(capsLockKeyChanges[i], colorOn[0], colorOn[1], colorOn[2]);
         }
     }
 
-if (host_keyboard_led_state().num_lock) {
+    if (host_keyboard_led_state().num_lock) {
     int numLockKeyChanges[] =
             {32,
             50, 51, 52,
@@ -68,7 +77,7 @@ if (host_keyboard_led_state().num_lock) {
         size_t sizeNumArray = sizeof(numLockKeyChanges) / sizeof(numLockKeyChanges[0]);
         for (size_t i = 0; i < sizeNumArray; i++)
         {
-            RGB_MATRIX_INDICATOR_SET_COLOR(numLockKeyChanges[i], 0, 0, 255);
+            RGB_MATRIX_INDICATOR_SET_COLOR(numLockKeyChanges[i], colorOn[0], colorOn[1], colorOn[2]);
         }
     }
 
